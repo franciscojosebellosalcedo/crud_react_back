@@ -26,7 +26,7 @@ Aplicación en donde el usuario podrá administrar registros de personas, de cad
 - TypeORM
 - ExpressJS
 - Mysql
-- Excel4node
+- Xlsx
 - PdfKit
 ## Tecnologia de depliegue:
 - Render
