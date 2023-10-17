@@ -24,6 +24,7 @@ export const getFileExcel = (req: Request, res: Response) => {
       const blob = Buffer.from(fileData);
       res.setHeader("NameFile",configExcel.nameFile);
       res.send(blob);
+      fs.unlinkSync(configExcel.nameFile);
     } catch (error) {
       console.log(error)
       return res.status(400).json(handlerResponseHttp(400, "Error al generar el archivo", false));
