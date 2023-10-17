@@ -1,3 +1,5 @@
+import { configExcel } from "../config/configFileGenerate";
+
 export const isValueDataEmpty = (body: any): boolean => {
   const keys: string[] = Object.keys(body);
   keys.map((key: string) => {
@@ -17,3 +19,19 @@ export const isValueDataEmpty = (body: any): boolean => {
   }
   return false;
 };
+
+export const convertObjetToArray=(data:any[]):any[]=>{
+  let array=[];
+  array.push(configExcel.headers);
+  data.map((item:any)=>{
+    const keys=Object.keys(item);
+    let dataArray:any=[];
+    keys.map((key:string)=>{
+      if(key !== "id") dataArray.push(item[`${key}`]);
+    });
+    array.push(dataArray);
+    dataArray=[];
+  });
+  return array;
+}
+
