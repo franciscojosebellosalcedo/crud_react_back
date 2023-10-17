@@ -6,12 +6,16 @@ import morgan from "morgan";
 import userRouter from "./routes/user.router";
 dotenv.config();
 
+const optionsCors={
+    origin:"*",
+    exposedHeaders:"NameFile",
+};
 
 const app=express();
 
-app.use(express.json());
+app.use(cors(optionsCors));
 app.use(helmet());
-app.use(cors());
+app.use(express.json());
 app.use(morgan("dev"));
 
 app.use("/api/user/",userRouter);
