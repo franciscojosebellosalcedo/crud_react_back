@@ -8,7 +8,6 @@ dotenv.config();
 
 const optionsCors={
     origin:"*",
-    exposedHeaders:"NameFile",
 };
 
 const app=express();
