@@ -29,4 +29,5 @@ Aplicación en donde el usuario podrá administrar registros de personas, de cad
 - Xlsx
 - PdfKit
 ## Tecnologia de depliegue:
-- Render
+- Vercel
+- Clever Cloud
