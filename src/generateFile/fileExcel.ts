@@ -18,13 +18,12 @@ export const getFileExcel = (req: Request, res: Response) => {
       Xlsx.utils.book_append_sheet(workbook, sheet, configExcel.nameSheet);
   
       // Escribir el libro en un archivo
-      Xlsx.writeFile(workbook, configExcel.nameFile);
+      const fileBinary = Xlsx.write(workbook, { bookType: 'xlsx', type: 'buffer' });
 
-      const fileData = fs.readFileSync(configExcel.nameFile);
-      const blob = Buffer.from(fileData);
-      res.setHeader("NameFile",configExcel.nameFile);
-      res.send(blob);
-      fs.unlinkSync(configExcel.nameFile);
+      // const fileData = fs.readFileSync(configExcel.nameFile);
+      // const blob = Buffer.from(fileData);
+      res.send(fileBinary);
+      // fs.unlinkSync(configExcel.nameFile);
     } catch (error) {
       console.log(error)
       return res.status(400).json(handlerResponseHttp(400, "Error al generar el archivo", false));
