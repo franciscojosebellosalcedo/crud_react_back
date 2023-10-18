@@ -29,5 +29,5 @@ Aplicación en donde el usuario podrá administrar registros de personas, de cad
 - Xlsx
 - PdfKit
 ## Tecnologia de depliegue:
-- Vercel
-- Clever Cloud
+- Vercel (API)
+- Clever Cloud (Base de datos)
