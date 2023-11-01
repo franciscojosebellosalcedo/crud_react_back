@@ -18,9 +18,9 @@ app.get("/", (req: Request, res: Response) => {
 
 const main = async () => {
   try {
+    connectionToDB();
     app.listen(process.env.PORT);
     console.log("server run on port ", process.env.PORT);
-    connectionToDB();
   } catch (error) {
     console.log(error)
   }
