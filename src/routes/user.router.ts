@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { create, deleteAll, deleteOneUserById, filterUsers, generatedFilePdf, getAllUser, getOneUser, updateUser } from "../controllers/user.controller";
+import { create, getAllUser, getOneUser,updateUser ,deleteOneUserById,filterUsers,generatedFilePdf,deleteAll} from "../controllers/user.controller";
 import { getFileExcel } from "../generateFile/fileExcel";
 
 const userRouter=Router();

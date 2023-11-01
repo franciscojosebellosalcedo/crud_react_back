@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { isValueDataEmpty } from "../utils/validateData";
-import { User } from "../entities/user.entity";
+import { Users } from "../entities/user.entity";
 import { handlerResponseHttp } from "../utils/response.handler";
 import { generateFilePdf } from "../generateFile/filePdf";
 import { jsonDataConvertToArray } from "../utils/file.utils";
@@ -8,9 +8,9 @@ import { configPdf } from "../config/configFileGenerate";
 
 export const deleteAll=async (req:Request,res:Response)=>{
   try {
-    const allUsers:User[]=await User.find();
+    const allUsers=await Users.find();
     allUsers.map(async (user)=>{
-      await User.delete({id:user.id});
+      await Users.deleteOne({_id:user.id});
     });
     return res
     .status(200)
@@ -60,17 +60,11 @@ export const filterUsers = async (req: Request, res: Response) => {
           handlerResponseHttp(400, "Error al filtrar a las persona", false)
         );
     }
-    let result: User[] = [];
+    let result=null;
     if (options.field !== "age") {
-      result = await User.find({
-        where: { [`${options.field}`]: options.value },
-      });
+      result = await Users.find({[`${options.field}`]: { $regex: new RegExp(options.value, 'i') }});
     } else {
-      result = await User.createQueryBuilder("users")
-        .where(`users.${options.field} ${options.operator} :${options.field}`, {
-          [`${options.field}`]: options.value,
-        })
-        .getMany();
+      result = await Users.find({[`${options.field}`]: { [`${options.operator}`]: options.value }});
     }
     return res
       .status(200)
@@ -91,17 +85,14 @@ export const create = async (req: Request, res: Response) => {
         .status(400)
         .json(handlerResponseHttp(400, "Complete los datos", false));
     }
-    const userCreated = await User.save(user);
+    const userNew = new Users(user);
+    const userCreated=await userNew.save();
     if (!userCreated) {
       return res
         .status(400)
         .json(handlerResponseHttp(400, "Error al agregar a la persona", false));
     }
-    return res.status(201).json(
-      handlerResponseHttp(201, "Persona agregada correctamente", true, {
-        ...userCreated,
-      })
-    );
+    return res.status(201).json(handlerResponseHttp(201, "Persona agregada correctamente", true, userCreated));
   } catch (error) {
     console.log(error);
     return res
@@ -112,15 +103,15 @@ export const create = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const dataNew = req.body;
     if (isValueDataEmpty(dataNew)) {
       return res
         .status(400)
         .json(handlerResponseHttp(400, "No puedes dejar datos vacios", false));
     }
-    const userUpdated = await User.update(id, dataNew);
-    if (!userUpdated || (userUpdated.affected as any) === 0) {
+    const userUpdated = await Users.updateOne({_id:id},dataNew);
+    if (userUpdated.modifiedCount=== 0) {
       return res
         .status(400)
         .json(handlerResponseHttp(400, "Error al editar a la persona", false));
@@ -137,7 +128,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
 export const getAllUser = async (req: Request, res: Response) => {
   try {
-    const data = await User.find();
+    const data = await Users.find();
     return res
       .status(200)
       .json(handlerResponseHttp(200, "Personas", true, data));
@@ -152,17 +143,15 @@ export const getAllUser = async (req: Request, res: Response) => {
 
 export const getOneUser = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
-    const registerFound = await User.findOneBy({ id });
+    const id = req.params.id;
+    const registerFound = await Users.findById(id);
     if (!registerFound) {
       return res
         .status(400)
         .json(handlerResponseHttp(400, "Error al obtener a la persona", false));
     }
     return res.status(200).json(
-      handlerResponseHttp(200, "Persona encontrada", true, {
-        ...registerFound,
-      })
+      handlerResponseHttp(200, "Persona encontrada", true,registerFound)
     );
   } catch (error) {
     return res
@@ -173,9 +162,9 @@ export const getOneUser = async (req: Request, res: Response) => {
 
 export const deleteOneUserById = async (req: Request, res: Response) => {
   try {
-    const id = parseInt(req.params.id);
-    const responseDeleted = await User.delete(id);
-    if (responseDeleted.affected === 0) {
+    const id = req.params.id;
+    const responseDeleted = await Users.deleteOne({_id:id});
+    if (responseDeleted.deletedCount===0) {
       return res
         .status(400)
         .json(

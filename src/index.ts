@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import app from "./app";
-import { AppDataSource } from "./config/db";
+import { connectionToDB } from "./config/db";
 
 app.get("/", (req: Request, res: Response) => {
   try {
@@ -20,8 +20,7 @@ const main = async () => {
   try {
     app.listen(process.env.PORT);
     console.log("server run on port ", process.env.PORT);
-    await AppDataSource.initialize();
-    console.log("Conect to db");
+    connectionToDB();
   } catch (error) {
     console.log(error)
   }
