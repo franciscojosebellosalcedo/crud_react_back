@@ -23,11 +23,11 @@ Aplicación en donde el usuario podrá administrar registros de personas, de cad
 ## Tecnologias usadas para este proyecto:
 - NodeJS
 - Typescript
-- TypeORM
+- MongoDB
+- Mongoose
 - ExpressJS
-- Mysql
 - Xlsx
 - PdfKit
 ## Tecnologia de depliegue:
 - Vercel (API)
-- Clever Cloud (Base de datos)
+- Mongo atlas (Base de datos)
